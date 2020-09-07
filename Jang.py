@@ -1,16 +1,16 @@
 from gtts import gTTS
-import os.path
 import pygame.mixer
-from time import sleep
+import time
 import playsound
 import speech_recognition as sr
 from requests import get
+import re
 from bs4 import BeautifulSoup
 
 #####Configurações#####
-hotword = 'google'
+hotword = 'irineu'
 
-with open('Python-Assitente-credenciais.json') as credenciais_google:
+with open('python-assitente-e2fa6dd00530.json') as credenciais_google:
     credenciais_google = credenciais_google.read()
 
 def monitora_audio():
@@ -35,20 +35,22 @@ def monitora_audio():
     return trigger
 
 def responde(arquivo_reposta):
-    playsound('./audios/'+ arquivo_reposta +'.mp3')
+    playsound.playsound('./audios/'+ arquivo_reposta +'.mp3')
 
 def cria_audio(mensagem):
     for i in range(len(mensagem)):
         tts = gTTS(text=mensagem[i], lang='pt-br')
+        mensagem[i] = re.sub(r'(")', "'", mensagem[i])
         file1 = str(str(mensagem[i]) + ".mp3")
         tts.save("noticias_agora/"+file1)
 
         #####Inicia reprodução de notícias#####
         pygame.mixer.init()
+        time.sleep(3)
         pygame.mixer.music.load(open('noticias_agora/'+file1, "rb"))
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
-            sleep(1)
+            time.sleep(2)
         print("done")
 
 #####Verifica o comando chamado#####
